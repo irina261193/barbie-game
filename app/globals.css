@@ -103,7 +103,7 @@ body { background:#ffc7df; }
 .search { width:318px;height:62px;padding:0 22px;border:1px solid #f0d6e3;border-radius:30px;background:white;box-shadow:0 4px 12px rgba(139,47,91,.08); }
 .search input { font-size:16px; }.search span { font-size:35px;line-height:1;transform:rotate(-15deg); }
 .heart { width:62px;height:62px;background:linear-gradient(145deg,#ff61a5,#e91e78);color:white;font-size:26px;box-shadow:0 8px 18px rgba(221,41,121,.25); }
-.showcase { min-height:calc(100vh - 142px);padding-bottom:72px;background:#ffc4de url('/hero-castle-v2.png') center top/cover no-repeat;overflow:hidden; }
+.showcase { min-height:calc(100vh - 142px);padding-bottom:72px;background-color:#ffc4de;background-position:center top;background-size:cover;background-repeat:no-repeat;overflow:hidden; }
 .hero { min-height:272px;padding:52px 26% 30px 8%;background:transparent;justify-content:flex-start; }
 .hero:before,.hero:after { display:none; }
 .sparkles { inset:40px 4% auto;font-size:24px;color:white;opacity:.75;letter-spacing:2.6em; }

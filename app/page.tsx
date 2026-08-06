@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+export const dynamic = "force-static";
+
 type GameId = "dress" | "gems" | "puppy";
 
 const games = [
@@ -23,6 +25,7 @@ const accessories = [
 const jewels = ["💖", "🌙", "⭐", "👑", "💎", "🌸"];
 
 export default function Home() {
+  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
   const [active, setActive] = useState<GameId | null>(null);
   const [search, setSearch] = useState("");
   const [favorite, setFavorite] = useState(false);
@@ -38,7 +41,7 @@ export default function Home() {
         <button className={`heart ${favorite ? "liked" : ""}`} onClick={() => setFavorite(!favorite)} aria-label="Избранное">♛</button>
       </header>
 
-      <div className="showcase" id="top">
+      <div className="showcase" id="top" style={{ backgroundImage: `url('${asset("/hero-castle-v2.png")}')` }}>
         <section className="hero">
           <div className="sparkles" aria-hidden="true">✦　✧　⋆　　　✦　　♡　✧</div>
           <h1>Мир волшебных игр</h1>
@@ -50,7 +53,7 @@ export default function Home() {
           {visible.map((game, index) => (
             <article className="card" key={game.id} id={index === 0 ? "new" : undefined}>
               <button className="card-cover" onClick={() => setActive(game.id)} aria-label={`Открыть игру ${game.title}`}>
-                <img src={game.image} alt="" />
+                <img src={asset(game.image)} alt="" />
                 <span className="tag">Новинка</span>
               </button>
               <div className="card-body"><h3>{game.title}</h3><p>{game.desc}</p><button onClick={() => setActive(game.id)}><span className="gamepad">✦</span> Играть</button></div>
@@ -72,6 +75,7 @@ function GameModal({ game, onClose }: { game: GameId; onClose: () => void }) {
 }
 
 function DressGame() {
+  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
   const [dress, setDress] = useState(0);
   const [accessory, setAccessory] = useState<number | null>(null);
   const [result, setResult] = useState<"win" | "try" | null>(null);
@@ -85,13 +89,13 @@ function DressGame() {
     <div className="mission"><span className="mission-icon">✉</span><div><b>Приглашение из дворца</b><p>Дресс-код: <strong>лавандовое платье</strong> и <strong>сияющая тиара</strong></p></div><div className="mission-progress">{dress === targetDress ? "●" : "○"}{accessory === targetAccessory ? "●" : "○"}<small>образ</small></div></div>
     <div className="royal-layout">
       <div className="princess-frame">
-        <img key={dresses[dress].image} src={dresses[dress].image} alt={`Барби в образе «${dresses[dress].name}»`} />
+        <img key={dresses[dress].image} src={asset(dresses[dress].image)} alt={`Барби в образе «${dresses[dress].name}»`} />
         {accessory !== null && <span className={`worn-accessory ${accessories[accessory].className}`}>{accessories[accessory].icon}</span>}
         <div className="look-label"><span>ТВОЙ ОБРАЗ</span><b>{dresses[dress].name}</b></div>
       </div>
       <div className="closet">
         <div className="choice-title"><span>✦</span><h3>Платье</h3><span>✦</span></div>
-        <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={d.image} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
+        <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
         <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
         <div className="accessory-options">{accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }}><span>{a.icon}</span><b>{a.name}</b>{accessory === i && <i>✓</i>}</button>)}</div>
       </div>
