@@ -11,9 +11,14 @@ const games = [
 ];
 
 const dresses = [
-  { name: "Зефирное облако", colors: ["#ff95c8", "#ffe1ef"], emoji: "👗" },
-  { name: "Лавандовая мечта", colors: ["#a886e8", "#e9ddff"], emoji: "🪻" },
-  { name: "Небесный вальс", colors: ["#75c8ec", "#d9f5ff"], emoji: "🦋" },
+  { name: "Зефирное облако", color: "#f64f9a", image: "/dress-up/rose-princess.png" },
+  { name: "Лавандовая мечта", color: "#9b72e8", image: "/dress-up/lavender-princess.png" },
+  { name: "Небесный вальс", color: "#6dbcf0", image: "/dress-up/sky-princess.png" },
+];
+const accessories = [
+  { name: "Корона мечты", icon: "👑", className: "crown" },
+  { name: "Звёздная тиара", icon: "💎", className: "tiara" },
+  { name: "Бант принцессы", icon: "🎀", className: "bow" },
 ];
 const jewels = ["💖", "🌙", "⭐", "👑", "💎", "🌸"];
 
@@ -67,8 +72,33 @@ function GameModal({ game, onClose }: { game: GameId; onClose: () => void }) {
 }
 
 function DressGame() {
-  const [dress, setDress] = useState(0); const [crown, setCrown] = useState(false); const [done, setDone] = useState(false);
-  return <div className="mini-game dress-game"><div className="game-top"><span>ИГРА 01</span><h2>Королевский образ</h2><p>Выбери платье и волшебный аксессуар</p></div><div className="dress-stage"><div className="avatar"><span className={`avatar-crown ${crown ? "show" : ""}`}>♛</span><span className="face">👩🏻</span><span className="big-dress" style={{ background: `linear-gradient(135deg,${dresses[dress].colors[0]},${dresses[dress].colors[1]})` }}>✦</span></div><div className="wardrobe"><h3>Платье</h3>{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setDone(false); }}><span style={{ background: d.colors[0] }}>{d.emoji}</span>{d.name}</button>)}<h3>Аксессуар</h3><button className={crown ? "selected" : ""} onClick={() => { setCrown(!crown); setDone(false); }}><span>👑</span>Корона мечты</button><button className="finish" onClick={() => setDone(true)}>Готово! ✦</button></div></div>{done && <div className="result">Великолепно! Ты готова к королевскому балу ♛</div>}</div>;
+  const [dress, setDress] = useState(0);
+  const [accessory, setAccessory] = useState<number | null>(null);
+  const [result, setResult] = useState<"win" | "try" | null>(null);
+  const targetDress = 1;
+  const targetAccessory = 1;
+  const checkLook = () => setResult(dress === targetDress && accessory === targetAccessory ? "win" : "try");
+
+  return <div className="royal-game">
+    <div className="royal-sky" aria-hidden="true"><span>✦</span><span>✧</span><span>⋆</span><span>✦</span></div>
+    <div className="royal-head"><div className="royal-kicker">—　♛　—<small>ИГРА 01</small></div><h2>Королевский образ</h2><p>Помоги Барби собраться на Лунный бал</p></div>
+    <div className="mission"><span className="mission-icon">✉</span><div><b>Приглашение из дворца</b><p>Дресс-код: <strong>лавандовое платье</strong> и <strong>сияющая тиара</strong></p></div><div className="mission-progress">{dress === targetDress ? "●" : "○"}{accessory === targetAccessory ? "●" : "○"}<small>образ</small></div></div>
+    <div className="royal-layout">
+      <div className="princess-frame">
+        <img key={dresses[dress].image} src={dresses[dress].image} alt={`Барби в образе «${dresses[dress].name}»`} />
+        {accessory !== null && <span className={`worn-accessory ${accessories[accessory].className}`}>{accessories[accessory].icon}</span>}
+        <div className="look-label"><span>ТВОЙ ОБРАЗ</span><b>{dresses[dress].name}</b></div>
+      </div>
+      <div className="closet">
+        <div className="choice-title"><span>✦</span><h3>Платье</h3><span>✦</span></div>
+        <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={d.image} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
+        <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
+        <div className="accessory-options">{accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }}><span>{a.icon}</span><b>{a.name}</b>{accessory === i && <i>✓</i>}</button>)}</div>
+      </div>
+    </div>
+    {result && <div className={`royal-result ${result}`}>{result === "win" ? <><b>Идеальное попадание! ✦✦✦</b><span>Барби готова к Лунному балу</span></> : <><b>Почти готово!</b><span>Загляни в приглашение и проверь обе детали образа</span></>}</div>}
+    <button className="royal-finish" onClick={checkLook}>На бал! <span>✦</span></button>
+  </div>;
 }
 
 function GemsGame() {
