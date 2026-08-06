@@ -27,36 +27,34 @@ export default function Home() {
   return (
     <main>
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="На главную"><span className="brand-crown">♛</span><span><b>DreamPlay</b><small>мир чудес</small></span></a>
-        <nav aria-label="Главная навигация"><a className="active" href="#top">Главная</a><a href="#games">Игры</a><a href="#new">Новинки</a></nav>
-        <label className="search"><span>⌕</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Найти игру..." aria-label="Найти игру" /></label>
-        <button className={`heart ${favorite ? "liked" : ""}`} onClick={() => setFavorite(!favorite)} aria-label="Избранное">♥</button>
+        <a className="brand" href="#top" aria-label="На главную"><span className="brand-crown">♛</span><span><b>Barbie Games</b><small>princess world</small></span></a>
+        <nav aria-label="Главная навигация"><a className="active" href="#top">Главная</a><a href="#games">Игры</a><a href="#games">Новинки</a><a href="#games">Избранное</a></nav>
+        <label className="search"><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Поиск игр..." aria-label="Найти игру" /><span>⌕</span></label>
+        <button className={`heart ${favorite ? "liked" : ""}`} onClick={() => setFavorite(!favorite)} aria-label="Избранное">♛</button>
       </header>
 
-      <section className="hero" id="top">
-        <div className="sparkles" aria-hidden="true">✦　⋆　✧　　　✦　　⋆　✧</div>
-        <span className="eyebrow">ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</span>
-        <h1>Мир волшебных игр</h1>
-        <p>Играй, мечтай, создавай!</p>
-        <div className="hero-chips"><span>✦ 3 мини-игры</span><span>♥ Без рекламы</span><span>☁ Играй в браузере</span></div>
-      </section>
+      <div className="showcase" id="top">
+        <section className="hero">
+          <div className="sparkles" aria-hidden="true">✦　✧　⋆　　　✦　　♡　✧</div>
+          <h1>Мир волшебных игр</h1>
+          <p>Играй, мечтай, создавай!</p>
+        </section>
 
-      <section className="games-section" id="games">
-        <div className="section-heading"><div><span>ВЫБЕРИ ПРИКЛЮЧЕНИЕ</span><h2>Во что сыграем?</h2></div><p>Каждая игра — маленький мир,<br />созданный для хорошего настроения.</p></div>
+        <section className="games-section" id="games">
         <div className="cards">
           {visible.map((game, index) => (
             <article className="card" key={game.id} id={index === 0 ? "new" : undefined}>
               <button className="card-cover" onClick={() => setActive(game.id)} aria-label={`Открыть игру ${game.title}`}>
                 <img src={game.image} alt="" />
-                <span className="tag">{game.tag}</span><span className="number">0{index + 1}</span>
-                <span className="play-float">▶</span>
+                <span className="tag">Новинка</span>
               </button>
-              <div className="card-body"><div className="card-title"><span>{game.icon}</span><h3>{game.title}</h3></div><p>{game.desc}</p><button onClick={() => setActive(game.id)}>Играть <span>→</span></button></div>
+              <div className="card-body"><h3>{game.title}</h3><p>{game.desc}</p><button onClick={() => setActive(game.id)}><span className="gamepad">✦</span> Играть</button></div>
             </article>
           ))}
         </div>
         {visible.length === 0 && <div className="empty">По такому запросу игр пока нет. Попробуй другое слово ✦</div>}
-      </section>
+        </section>
+      </div>
 
       <footer><div className="footer-brand">♛ DreamPlay</div><p>Три маленьких мира — бесконечно много радости.</p><span>Сделано с ♥ и щепоткой волшебства</span></footer>
       {active && <GameModal game={active} onClose={() => setActive(null)} />}

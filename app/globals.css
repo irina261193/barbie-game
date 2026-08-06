@@ -89,3 +89,39 @@ footer>span { font-size:10px;letter-spacing:.08em;color:#c998b6; }
 @keyframes fade { from{opacity:0} } @keyframes pop { from{opacity:0;transform:scale(.94)} } @keyframes bounce { to{transform:translateY(-12px) rotate(3deg)} } @keyframes float { to{transform:translateY(-16px)} }
 @media(max-width:900px){ .topbar{gap:18px;height:76px}.brand{min-width:auto}.brand small{display:none}nav{display:none}.search{margin-left:auto;width:190px}.hero{min-height:390px}.cards{grid-template-columns:1fr;max-width:600px;margin:auto}.section-heading{align-items:start}.section-heading p{display:none}.card p{min-height:auto}.mini-game{padding:32px 20px}.dress-stage{grid-template-columns:1fr}.avatar{min-height:310px}.jewel-board{grid-template-columns:repeat(4,64px)}.jewel-board button{width:64px;height:58px;font-size:28px} }
 @media(max-width:520px){ .topbar{padding:0 14px}.brand b{font-size:21px}.brand-crown{width:38px;height:38px}.search{width:44px;border:0}.search input{display:none}.heart{width:38px;height:38px}.hero{min-height:350px;padding-top:44px}h1{font-size:55px}.hero>p{font-size:22px}.games-section{padding-top:55px}.section-heading h2{font-size:38px}.card h3{font-size:24px}footer{display:block;text-align:center}footer p{margin:12px}.mini-game{min-height:580px}.game-top h2{font-size:34px}.jewel-board{gap:6px;padding:14px;border-width:6px}.jewel-board button{width:58px;height:54px}.care-actions button{padding:8px;font-size:10px}.pet-stage{height:280px}.puppy{font-size:125px} }
+
+/* Reference-led showcase */
+body { background:#ffc7df; }
+.topbar { position:relative;height:142px;padding:0 clamp(28px,6.4vw,100px);gap:54px;background:rgba(255,253,251,.96);border-radius:0 0 0 46px;box-shadow:0 5px 22px rgba(211,72,132,.08); }
+.brand { min-width:220px;align-self:stretch;position:relative;justify-content:center; }
+.brand-crown { position:absolute;top:18px;left:53px;background:transparent;width:auto;height:auto;color:#f0428a;font-size:39px;transform:rotate(-7deg); }
+.brand b { padding-top:28px;font-family:var(--font-display),serif;font-style:italic;font-size:27px;line-height:1;color:#ef2f82; }
+.brand small { color:#f04b8e;text-align:center;display:block;margin-top:5px;letter-spacing:.1em; }
+.topbar nav { justify-content:center;gap:48px; }
+.topbar nav a { font-size:16px;padding:53px 0; }
+.topbar nav a.active:after { bottom:39px; }
+.search { width:318px;height:62px;padding:0 22px;border:1px solid #f0d6e3;border-radius:30px;background:white;box-shadow:0 4px 12px rgba(139,47,91,.08); }
+.search input { font-size:16px; }.search span { font-size:35px;line-height:1;transform:rotate(-15deg); }
+.heart { width:62px;height:62px;background:linear-gradient(145deg,#ff61a5,#e91e78);color:white;font-size:26px;box-shadow:0 8px 18px rgba(221,41,121,.25); }
+.showcase { min-height:calc(100vh - 142px);padding-bottom:72px;background:#ffc4de url('/hero-castle-v2.png') center top/cover no-repeat;overflow:hidden; }
+.hero { min-height:272px;padding:52px 26% 30px 8%;background:transparent;justify-content:flex-start; }
+.hero:before,.hero:after { display:none; }
+.sparkles { inset:40px 4% auto;font-size:24px;color:white;opacity:.75;letter-spacing:2.6em; }
+h1 { font-size:clamp(62px,6vw,94px);color:#e62073;text-shadow:0 3px 0 rgba(255,255,255,.78),0 8px 24px rgba(196,38,109,.12);line-height:.96; }
+.hero>p { margin:18px 0 0;color:#c8639a;font-family:var(--font-sans),sans-serif;font-style:normal;font-size:25px;font-weight:500; }
+.games-section { position:relative;padding:0 clamp(28px,5vw,80px) 0;max-width:1536px;margin:0 auto; }
+.cards { gap:22px; }
+.card { border:12px solid white;border-radius:36px;background:white;box-shadow:0 18px 35px rgba(185,43,109,.19); }
+.card:hover { transform:translateY(-6px); }
+.card-cover { aspect-ratio:1.52;border-radius:22px; }
+.card-cover img { object-position:center; }
+.tag { left:-2px;top:8px;background:linear-gradient(180deg,#fc58a0,#ed277d);color:white;padding:9px 21px;border-radius:0 22px 22px 0;font-size:13px;letter-spacing:0;text-transform:none;box-shadow:0 5px 12px rgba(205,27,105,.22); }
+.number,.play-float { display:none; }
+.card-body { padding:23px 14px 18px;text-align:center; }
+.card h3 { font-family:var(--font-sans),sans-serif;font-size:22px;font-weight:800;color:#57215a; }
+.card p { min-height:36px;margin:13px 0 18px;color:#a24387;font-size:13px; }
+.card-body>button { min-width:160px;padding:13px 24px;border-radius:17px;background:linear-gradient(180deg,#fa5ca1,#ed217b);color:white;font-size:17px;letter-spacing:0;text-transform:none;box-shadow:0 7px 13px rgba(222,35,116,.22); }
+.gamepad { margin:0 7px 0 0!important;font-size:16px!important; }
+footer { display:none; }
+@media(max-width:1080px){ .topbar{height:100px;border-radius:0;padding:0 24px}.brand{min-width:190px}.brand-crown{top:8px}.brand b{padding-top:22px}.topbar nav{display:none}.search{margin-left:auto}.showcase{min-height:calc(100vh - 100px)}.hero{min-height:250px;padding-right:24%}.cards{gap:16px}.card{border-width:8px}.card h3{font-size:18px} }
+@media(max-width:760px){ .topbar{height:78px;padding:0 14px;gap:10px}.brand{min-width:auto}.brand-crown{display:none}.brand b{padding:0;font-size:22px}.brand small{display:none}.search{width:44px;height:44px;padding:0;display:grid;place-items:center}.search input{display:none}.heart{width:44px;height:44px}.showcase{min-height:calc(100vh - 78px);background-position:64% top}.hero{min-height:300px;padding:55px 18px 35px;justify-content:center;background:linear-gradient(90deg,rgba(255,224,238,.72),rgba(255,224,238,.25))}h1{font-size:55px}.hero>p{font-size:20px}.games-section{padding:0 18px 50px}.cards{grid-template-columns:1fr;max-width:440px}.card{border-width:9px}.card p{min-height:auto} }
