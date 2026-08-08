@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const dynamic = "force-static";
 
@@ -29,6 +29,22 @@ export default function Home() {
   const [active, setActive] = useState<GameId | null>(null);
   const [search, setSearch] = useState("");
   const [favorite, setFavorite] = useState(false);
+  const [musicOn, setMusicOn] = useState(false);
+  const musicRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const music = new Audio(new URL("./shimmer-loop.mp3", window.location.href).href);
+    music.loop = true;
+    music.volume = 0.28;
+    musicRef.current = music;
+    const startMusic = () => void music.play().then(() => setMusicOn(true)).catch(() => undefined);
+    window.addEventListener("pointerdown", startMusic, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", startMusic);
+      music.pause();
+      musicRef.current = null;
+    };
+  }, []);
 
   const visible = games.filter((g) => `${g.title} ${g.desc}`.toLowerCase().includes(search.toLowerCase()));
   const openGame = (id: GameId) => {
@@ -37,6 +53,12 @@ export default function Home() {
     void click.play().catch(() => undefined);
     setActive(id);
   };
+  const toggleMusic = () => {
+    const music = musicRef.current;
+    if (!music) return;
+    if (music.paused) void music.play().then(() => setMusicOn(true)).catch(() => undefined);
+    else { music.pause(); setMusicOn(false); }
+  };
 
   return (
     <main>
@@ -44,6 +66,7 @@ export default function Home() {
         <a className="brand" href="#top" aria-label="На главную"><span className="brand-crown">♛</span><span><b>Barbie Games</b><small>princess world</small></span></a>
         <nav aria-label="Главная навигация"><a className="active" href="#top">Главная</a><a href="#games">Игры</a><a href="#games">Новинки</a><a href="#games">Избранное</a></nav>
         <label className="search"><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Поиск игр..." aria-label="Найти игру" /><span>⌕</span></label>
+        <button className="music-toggle" onClick={toggleMusic} aria-label={musicOn ? "Выключить музыку" : "Включить музыку"} aria-pressed={musicOn}>{musicOn ? "♪" : "♩"}</button>
         <button className={`heart ${favorite ? "liked" : ""}`} onClick={() => setFavorite(!favorite)} aria-label="Избранное">♛</button>
       </header>
 
