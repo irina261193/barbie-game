@@ -25,7 +25,7 @@ const accessories = [
 const jewels = ["💖", "🌙", "⭐", "👑", "💎", "🌸"];
 
 export default function Home() {
-  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+  const asset = (path: string) => `.${path}`;
   const [active, setActive] = useState<GameId | null>(null);
   const [search, setSearch] = useState("");
   const [favorite, setFavorite] = useState(false);
@@ -104,7 +104,7 @@ function GameModal({ game, onClose }: { game: GameId; onClose: () => void }) {
 }
 
 function DressGame() {
-  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+  const asset = (path: string) => `.${path}`;
   const [dress, setDress] = useState(0);
   const [accessory, setAccessory] = useState<number | null>(null);
   const [result, setResult] = useState<"win" | "try" | null>(null);
