@@ -113,7 +113,30 @@ function GemsGame() {
 }
 
 function PuppyGame() {
-  const [care, setCare] = useState<string[]>([]); const actions = [{ id: "wash", label: "Искупать", icon: "🫧" }, { id: "brush", label: "Расчесать", icon: "🪮" }, { id: "bow", label: "Надеть бант", icon: "🎀" }];
+  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
+  const [care, setCare] = useState<string[]>([]);
+  const actions = [
+    { id: "wash", label: "Искупать", icon: "🪮" },
+    { id: "brush", label: "Расчесать", icon: "🧴" },
+    { id: "bow", label: "Надеть бант", icon: "🎀" },
+  ];
   const doCare = (id: string) => !care.includes(id) && setCare([...care, id]);
-  return <div className="mini-game puppy-game"><div className="game-top"><span>ИГРА 03</span><h2>Салон для щенка</h2><p>{care.length === 3 ? "Ура! Пушинка сияет от счастья!" : "Позаботься о Пушинке — выполни три шага"}</p></div><div className="pet-stage"><div className="bubbles">{care.includes("wash") && "○　◌　○　◌"}</div><div className={`puppy ${care.length === 3 ? "happy" : ""}`}>{care.includes("bow") && <span className="pet-bow">🎀</span>}🐶</div><div className="love">{"♥".repeat(care.length)}{"♡".repeat(3 - care.length)}</div></div><div className="care-actions">{actions.map((a) => <button key={a.id} className={care.includes(a.id) ? "done" : ""} onClick={() => doCare(a.id)}><span>{care.includes(a.id) ? "✓" : a.icon}</span>{a.label}</button>)}</div></div>;
+
+  return <div className="puppy-game">
+    <div className={`puppy-portrait ${care.length === 3 ? "complete" : ""}`}>
+      <img src={asset("/games/puppy-salon.png")} alt="Белый щенок в розовом салоне" />
+      {care.includes("wash") && <div className="puppy-bubbles" aria-hidden="true">○　◌　○　◌　○</div>}
+      {care.includes("bow") && <div className="puppy-bow" aria-hidden="true">🎀</div>}
+      <div className="puppy-hearts" aria-label={`${care.length} из 3 заданий выполнено`}>
+        {[0, 1, 2].map((heart) => <span key={heart} className={heart < care.length ? "filled" : ""}>♡</span>)}
+      </div>
+    </div>
+    <p className="puppy-status" aria-live="polite">{care.length === 3 ? "Пушинка готова! Она сияет от счастья ✨" : "Позаботься о Пушинке"}</p>
+    <div className="care-actions">
+      {actions.map((action) => <button key={action.id} className={care.includes(action.id) ? "done" : ""} onClick={() => doCare(action.id)} aria-pressed={care.includes(action.id)}>
+        <span aria-hidden="true">{care.includes(action.id) ? "✓" : action.icon}</span>
+        <b>{action.label}</b>
+      </button>)}
+    </div>
+  </div>;
 }
