@@ -52,8 +52,8 @@ export default function Home() {
         <div className="cards">
           {visible.map((game, index) => (
             <article className="card" key={game.id} id={index === 0 ? "new" : undefined}>
-              <button className="card-cover" onClick={() => setActive(game.id)} aria-label={`Открыть игру ${game.title}`}>
-                <img src={asset(game.image)} alt="" />
+              <button className={`card-cover card-cover-${game.id}`} onClick={() => setActive(game.id)} aria-label={`Открыть игру ${game.title}`}>
+                <img src={asset(game.image)} alt={`Аватар игры «${game.title}»`} />
                 <span className="tag">Новинка</span>
               </button>
               <div className="card-body"><h3>{game.title}</h3><p>{game.desc}</p><button onClick={() => setActive(game.id)}><span className="gamepad">✦</span> Играть</button></div>

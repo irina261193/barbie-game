@@ -113,8 +113,11 @@ h1 { font-size:clamp(62px,6vw,94px);color:#e62073;text-shadow:0 3px 0 rgba(255,2
 .cards { gap:22px; }
 .card { border:12px solid white;border-radius:36px;background:white;box-shadow:0 18px 35px rgba(185,43,109,.19); }
 .card:hover { transform:translateY(-6px); }
-.card-cover { aspect-ratio:1.52;border-radius:22px; }
+.card-cover { aspect-ratio:.92;border-radius:22px; }
 .card-cover img { object-position:center; }
+.card-cover-dress img { object-position:66% center; }
+.card-cover-gems img { object-position:50% center; }
+.card-cover-puppy img { object-position:50% center; }
 .tag { left:-2px;top:8px;background:linear-gradient(180deg,#fc58a0,#ed277d);color:white;padding:9px 21px;border-radius:0 22px 22px 0;font-size:13px;letter-spacing:0;text-transform:none;box-shadow:0 5px 12px rgba(205,27,105,.22); }
 .number,.play-float { display:none; }
 .card-body { padding:23px 14px 18px;text-align:center; }
