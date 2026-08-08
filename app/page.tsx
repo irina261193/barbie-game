@@ -31,6 +31,12 @@ export default function Home() {
   const [favorite, setFavorite] = useState(false);
 
   const visible = games.filter((g) => `${g.title} ${g.desc}`.toLowerCase().includes(search.toLowerCase()));
+  const openGame = (id: GameId) => {
+    const click = new Audio(new URL("./button-click-short-gentle-close.mp3", window.location.href).href);
+    click.volume = 0.65;
+    void click.play().catch(() => undefined);
+    setActive(id);
+  };
 
   return (
     <main>
@@ -52,11 +58,11 @@ export default function Home() {
         <div className="cards">
           {visible.map((game, index) => (
             <article className="card" key={game.id} id={index === 0 ? "new" : undefined}>
-              <button className={`card-cover card-cover-${game.id}`} onClick={() => setActive(game.id)} aria-label={`Открыть игру ${game.title}`}>
+              <button className={`card-cover card-cover-${game.id}`} onClick={() => openGame(game.id)} aria-label={`Открыть игру ${game.title}`}>
                 <img src={asset(game.image)} alt={`Аватар игры «${game.title}»`} />
                 <span className="tag">Новинка</span>
               </button>
-              <div className="card-body"><h3>{game.title}</h3><p>{game.desc}</p><button onClick={() => setActive(game.id)}><span className="gamepad">✦</span> Играть</button></div>
+              <div className="card-body"><h3>{game.title}</h3><p>{game.desc}</p><button onClick={() => openGame(game.id)}><span className="gamepad">✦</span> Играть</button></div>
             </article>
           ))}
         </div>
@@ -113,30 +119,23 @@ function GemsGame() {
 }
 
 function PuppyGame() {
-  const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
   const [care, setCare] = useState<string[]>([]);
   const actions = [
-    { id: "wash", label: "Искупать", icon: "🪮" },
-    { id: "brush", label: "Расчесать", icon: "🧴" },
-    { id: "bow", label: "Надеть бант", icon: "🎀" },
+    { id: "wash", label: "Искупать" },
+    { id: "brush", label: "Расчесать" },
+    { id: "bow", label: "Надеть бант" },
   ];
   const doCare = (id: string) => !care.includes(id) && setCare([...care, id]);
 
   return <div className="puppy-game">
-    <div className={`puppy-portrait ${care.length === 3 ? "complete" : ""}`}>
-      <img src={asset("/games/puppy-salon.png")} alt="Белый щенок в розовом салоне" />
-      {care.includes("wash") && <div className="puppy-bubbles" aria-hidden="true">○　◌　○　◌　○</div>}
-      {care.includes("bow") && <div className="puppy-bow" aria-hidden="true">🎀</div>}
-      <div className="puppy-hearts" aria-label={`${care.length} из 3 заданий выполнено`}>
-        {[0, 1, 2].map((heart) => <span key={heart} className={heart < care.length ? "filled" : ""}>♡</span>)}
+    <div className="puppy-reference-screen">
+      <img src="./a-dog.png" alt="Белый щенок и три кнопки ухода: искупать, расчесать и надеть бант" />
+      <div className="puppy-hotspots">
+        {actions.map((action) => <button key={action.id} className={`puppy-hotspot puppy-hotspot-${action.id} ${care.includes(action.id) ? "done" : ""}`} onClick={() => doCare(action.id)} aria-label={action.label} aria-pressed={care.includes(action.id)}>
+          <span>{care.includes(action.id) ? "Выполнено" : action.label}</span>
+        </button>)}
       </div>
-    </div>
-    <p className="puppy-status" aria-live="polite">{care.length === 3 ? "Пушинка готова! Она сияет от счастья ✨" : "Позаботься о Пушинке"}</p>
-    <div className="care-actions">
-      {actions.map((action) => <button key={action.id} className={care.includes(action.id) ? "done" : ""} onClick={() => doCare(action.id)} aria-pressed={care.includes(action.id)}>
-        <span aria-hidden="true">{care.includes(action.id) ? "✓" : action.icon}</span>
-        <b>{action.label}</b>
-      </button>)}
+      <p className={`puppy-complete ${care.length === 3 ? "show" : ""}`} aria-live="polite">Пушинка готова! ✨</p>
     </div>
   </div>;
 }
