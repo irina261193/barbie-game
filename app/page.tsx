@@ -110,7 +110,11 @@ function DressGame() {
   const [result, setResult] = useState<"win" | "try" | null>(null);
   const targetDress = 1;
   const targetAccessory = 1;
-  const checkLook = () => setResult("win");
+  const chooseDress = (index: number) => {
+    setDress(index);
+    setResult(index === targetDress ? null : "try");
+  };
+  const checkLook = () => setResult(dress === targetDress && accessory === targetAccessory ? "win" : "try");
 
   if (result === "win") return <GameFinale image={dresses[dress].ballImage} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
 
@@ -126,7 +130,7 @@ function DressGame() {
       </div>
       <div className="closet">
         <div className="choice-title"><span>✦</span><h3>Платье</h3><span>✦</span></div>
-        <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
+        <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => chooseDress(i)}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
         <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
         <div className="accessory-showcase">
           <img src={asset("/accessoires.png")} alt="Корона мечты, Звёздная тиара и Бант принцессы" />
