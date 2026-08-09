@@ -153,7 +153,7 @@ function PuppyGame() {
   const actions = [
     { id: "wash", label: "Искупать", icon: "🛁", note: "Смыть всю грязь" },
     { id: "brush", label: "Расчесать", icon: "🪮", note: "Причесать шерстку" },
-    { id: "bow", label: "Надеть бант", icon: "🎀", note: "Нарядить на бал" },
+    { id: "dress", label: "Одеть щенка", icon: "🧥", note: "Надеть жилетку" },
   ];
   const doCare = (id: string) => {
     if (actions[care.length]?.id === id) setCare([...care, id]);
@@ -164,8 +164,8 @@ function PuppyGame() {
   return <div className="puppy-game">
     <div className="puppy-reference-screen">
       <div className={`puppy-stage stage-${care.length}`}>
-        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./clean-puppy.png" : "./a-dog.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок без банта" : care.length === 2 ? "Чистый причесанный щенок без банта" : "Чистый причесанный щенок с бантом"} />
-        <div className="puppy-status">{care.length === 0 ? "Пушинке нужен уход" : care.length === 1 ? "Чисто! Теперь расчеши" : care.length === 2 ? "Причесано! Остался бант" : "Пушинка готова к балу!"}</div>
+        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./clean-puppy.png" : "./dog-in-jacket.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок без одежды" : care.length === 2 ? "Чистый причесанный щенок без одежды" : "Чистый причесанный щенок в розовой жилетке"} />
+        <div className="puppy-status">{care.length === 0 ? "Пушинке нужен уход" : care.length === 1 ? "Чисто! Теперь расчеши" : care.length === 2 ? "Причесано! Осталась жилетка" : "Пушинка в жилетке и готова к балу!"}</div>
       </div>
       <div className="puppy-score">СЧЁТ <b>{care.length * 30}</b></div>
       <div className="puppy-actions">
@@ -183,7 +183,7 @@ function GameFinale({ image, title, subtitle, onReplay, puppy = false, lookImage
   return <div className="game-finale">
     <img className="finale-scene" src={`.${image}`} alt={title} />
     <div className="finale-shade" />
-    {puppy && <div className="finale-puppy"><img src="./a-dog.png" alt="Нарядная Пушинка на балу" /><span>Пушинка</span></div>}
+    {puppy && <div className="finale-puppy"><img src="./dog-in-jacket.png" alt="Нарядная Пушинка в жилетке на балу" /><span>Пушинка</span></div>}
     {lookImage && <div className="finale-look"><img src={`.${lookImage}`} alt={`Выбранный образ: ${lookLabel}`} /><span>{lookLabel}</span></div>}
     <div className="finale-copy"><span>✦ ПОБЕДА ✦</span><h2>{title}</h2><p>{subtitle}</p><button onClick={onReplay}>Играть ещё раз</button></div>
   </div>;
