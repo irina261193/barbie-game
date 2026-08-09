@@ -13,9 +13,9 @@ const games = [
 ];
 
 const dresses = [
-  { name: "Зефирное облако", color: "#f64f9a", image: "/dress-up/rose-princess.png" },
-  { name: "Лавандовая мечта", color: "#9b72e8", image: "/dress-up/lavender-princess.png" },
-  { name: "Небесный вальс", color: "#6dbcf0", image: "/dress-up/sky-princess.png" },
+  { name: "Зефирное облако", color: "#f64f9a", image: "/dress-up/rose-princess.png", ballImage: "/ball-rose.png" },
+  { name: "Лавандовая мечта", color: "#9b72e8", image: "/dress-up/lavender-princess.png", ballImage: "/ball-lavender.png" },
+  { name: "Небесный вальс", color: "#6dbcf0", image: "/dress-up/sky-princess.png", ballImage: "/ball-sky.png" },
 ];
 const accessories = [
   { name: "Корона мечты", note: "золотое сияние", icon: "👑", className: "crown" },
@@ -112,7 +112,7 @@ function DressGame() {
   const targetAccessory = 1;
   const checkLook = () => setResult("win");
 
-  if (result === "win") return <GameFinale image="/barbie-and-ken.png" lookImage={dresses[dress].image} lookLabel={dresses[dress].name} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
+  if (result === "win") return <GameFinale image={dresses[dress].ballImage} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
 
   return <div className="royal-game">
     <div className="royal-sky" aria-hidden="true"><span>✦</span><span>✧</span><span>⋆</span><span>✦</span></div>
@@ -132,10 +132,10 @@ function DressGame() {
           <img src={asset("/accessoires.png")} alt="Корона мечты, Звёздная тиара и Бант принцессы" />
           {accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }} aria-label={`Выбрать аксессуар «${a.name}»`} aria-pressed={accessory === i}><span>{accessory === i ? "✓ Выбрано" : a.name}</span></button>)}
         </div>
+        <button className="royal-finish" onClick={checkLook}>Отправить на бал <span>✦</span></button>
       </div>
     </div>
     {result && <div className={`royal-result ${result}`}>{result === "win" ? <><b>Идеальное попадание! ✦✦✦</b><span>Барби готова к Лунному балу</span></> : <><b>Почти готово!</b><span>Загляни в приглашение и проверь обе детали образа</span></>}</div>}
-    <button className="royal-finish" onClick={checkLook}>Отправить на бал <span>✦</span></button>
   </div>;
 }
 
@@ -164,7 +164,7 @@ function PuppyGame() {
   return <div className="puppy-game">
     <div className="puppy-reference-screen">
       <div className={`puppy-stage stage-${care.length}`}>
-        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./games/puppy-salon.png" : "./a-dog.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок" : care.length === 2 ? "Чистый причесанный щенок" : "Чистый причесанный щенок с бантом"} />
+        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./clean-puppy.png" : "./a-dog.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок без банта" : care.length === 2 ? "Чистый причесанный щенок без банта" : "Чистый причесанный щенок с бантом"} />
         <div className="puppy-status">{care.length === 0 ? "Пушинке нужен уход" : care.length === 1 ? "Чисто! Теперь расчеши" : care.length === 2 ? "Причесано! Остался бант" : "Пушинка готова к балу!"}</div>
       </div>
       <div className="puppy-score">СЧЁТ <b>{care.length * 30}</b></div>
