@@ -128,7 +128,10 @@ function DressGame() {
         <div className="choice-title"><span>✦</span><h3>Платье</h3><span>✦</span></div>
         <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
         <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
-        <div className="accessory-options">{accessories.map((a, i) => <button className={`${accessory === i ? "selected" : ""} accessory-${a.className}`} key={a.name} onClick={() => { setAccessory(i); setResult(null); }}><span className="accessory-gem">{a.icon}</span><span className="accessory-copy"><b>{a.name}</b><small>{a.note}</small></span>{accessory === i && <i>✓</i>}</button>)}</div>
+        <div className="accessory-showcase">
+          <img src={asset("/accessoires.png")} alt="Корона мечты, Звёздная тиара и Бант принцессы" />
+          {accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }} aria-label={`Выбрать аксессуар «${a.name}»`} aria-pressed={accessory === i}><span>{accessory === i ? "✓ Выбрано" : a.name}</span></button>)}
+        </div>
       </div>
     </div>
     {result && <div className={`royal-result ${result}`}>{result === "win" ? <><b>Идеальное попадание! ✦✦✦</b><span>Барби готова к Лунному балу</span></> : <><b>Почти готово!</b><span>Загляни в приглашение и проверь обе детали образа</span></>}</div>}
