@@ -18,9 +18,9 @@ const dresses = [
   { name: "Небесный вальс", color: "#6dbcf0", image: "/dress-up/sky-princess.png" },
 ];
 const accessories = [
-  { name: "Корона мечты", icon: "👑", className: "crown" },
-  { name: "Звёздная тиара", icon: "💎", className: "tiara" },
-  { name: "Бант принцессы", icon: "🎀", className: "bow" },
+  { name: "Корона мечты", note: "золотое сияние", icon: "👑", className: "crown" },
+  { name: "Звёздная тиара", note: "лунные кристаллы", icon: "💎", className: "tiara" },
+  { name: "Бант принцессы", note: "розовый шёлк", icon: "🎀", className: "bow" },
 ];
 const jewels = ["💖", "🌙", "⭐", "👑", "💎", "🌸"];
 
@@ -110,9 +110,9 @@ function DressGame() {
   const [result, setResult] = useState<"win" | "try" | null>(null);
   const targetDress = 1;
   const targetAccessory = 1;
-  const checkLook = () => setResult(dress === targetDress && accessory === targetAccessory ? "win" : "try");
+  const checkLook = () => setResult("win");
 
-  if (result === "win") return <GameFinale image="/barbie-and-ken.png" title="Барби на королевском балу!" subtitle="Идеальный образ готов — Барби и Кен танцуют вместе под сиянием дворцовых огней." onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
+  if (result === "win") return <GameFinale image="/barbie-and-ken.png" lookImage={dresses[dress].image} lookLabel={dresses[dress].name} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
 
   return <div className="royal-game">
     <div className="royal-sky" aria-hidden="true"><span>✦</span><span>✧</span><span>⋆</span><span>✦</span></div>
@@ -128,11 +128,11 @@ function DressGame() {
         <div className="choice-title"><span>✦</span><h3>Платье</h3><span>✦</span></div>
         <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => { setDress(i); setResult(null); }}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
         <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
-        <div className="accessory-options">{accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }}><span>{a.icon}</span><b>{a.name}</b>{accessory === i && <i>✓</i>}</button>)}</div>
+        <div className="accessory-options">{accessories.map((a, i) => <button className={`${accessory === i ? "selected" : ""} accessory-${a.className}`} key={a.name} onClick={() => { setAccessory(i); setResult(null); }}><span className="accessory-gem">{a.icon}</span><span className="accessory-copy"><b>{a.name}</b><small>{a.note}</small></span>{accessory === i && <i>✓</i>}</button>)}</div>
       </div>
     </div>
     {result && <div className={`royal-result ${result}`}>{result === "win" ? <><b>Идеальное попадание! ✦✦✦</b><span>Барби готова к Лунному балу</span></> : <><b>Почти готово!</b><span>Загляни в приглашение и проверь обе детали образа</span></>}</div>}
-    <button className="royal-finish" onClick={checkLook}>На бал! <span>✦</span></button>
+    <button className="royal-finish" onClick={checkLook}>Отправить на бал <span>✦</span></button>
   </div>;
 }
 
@@ -148,9 +148,9 @@ function PuppyGame() {
   const [care, setCare] = useState<string[]>([]);
   const [atBall, setAtBall] = useState(false);
   const actions = [
-    { id: "wash", label: "Искупать" },
-    { id: "brush", label: "Расчесать" },
-    { id: "bow", label: "Надеть бант" },
+    { id: "wash", label: "Искупать", icon: "🛁", note: "Смыть всю грязь" },
+    { id: "brush", label: "Расчесать", icon: "🪮", note: "Причесать шерстку" },
+    { id: "bow", label: "Надеть бант", icon: "🎀", note: "Нарядить на бал" },
   ];
   const doCare = (id: string) => {
     if (actions[care.length]?.id === id) setCare([...care, id]);
@@ -160,13 +160,14 @@ function PuppyGame() {
 
   return <div className="puppy-game">
     <div className="puppy-reference-screen">
-      <img src="./a-dog.png" alt="Белый щенок и три кнопки ухода: искупать, расчесать и надеть бант" />
-      {care.length === 0 && <img className="puppy-stage-overlay dirty" src="./a-dirty-dog.png" alt="Грязная лохматая собака до ухода" />}
-      {care.length > 0 && care.length < 3 && <img className="puppy-stage-overlay grooming" src="./games/puppy-salon.png" alt="Чистый щенок во время ухода" />}
+      <div className={`puppy-stage stage-${care.length}`}>
+        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./games/puppy-salon.png" : "./a-dog.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок" : care.length === 2 ? "Чистый причесанный щенок" : "Чистый причесанный щенок с бантом"} />
+        <div className="puppy-status">{care.length === 0 ? "Пушинке нужен уход" : care.length === 1 ? "Чисто! Теперь расчеши" : care.length === 2 ? "Причесано! Остался бант" : "Пушинка готова к балу!"}</div>
+      </div>
       <div className="puppy-score">СЧЁТ <b>{care.length * 30}</b></div>
-      <div className="puppy-hotspots">
-        {actions.map((action, index) => <button key={action.id} disabled={index !== care.length} className={`puppy-hotspot puppy-hotspot-${action.id} ${care.includes(action.id) ? "done" : ""} ${index === care.length ? "current" : ""}`} onClick={() => doCare(action.id)} aria-label={`${action.label}, +30 очков`} aria-pressed={care.includes(action.id)}>
-          <span>{care.includes(action.id) ? "Выполнено" : action.label}</span>
+      <div className="puppy-actions">
+        {actions.map((action, index) => <button key={action.id} disabled={index !== care.length} className={`${care.includes(action.id) ? "done" : ""} ${index === care.length ? "current" : ""}`} onClick={() => doCare(action.id)} aria-label={`${action.label}, +30 очков`} aria-pressed={care.includes(action.id)}>
+          <span className="puppy-action-icon">{action.icon}</span><b>{care.includes(action.id) ? "Выполнено ✓" : action.label}</b><small>{care.includes(action.id) ? "+30 очков" : action.note}</small>
         </button>)}
       </div>
       {care.length === 3 && <button className="puppy-ball-button" onClick={() => setAtBall(true)}>На бал! <span>+10</span></button>}
@@ -175,11 +176,12 @@ function PuppyGame() {
   </div>;
 }
 
-function GameFinale({ image, title, subtitle, onReplay, puppy = false }: { image: string; title: string; subtitle: string; onReplay: () => void; puppy?: boolean }) {
+function GameFinale({ image, title, subtitle, onReplay, puppy = false, lookImage, lookLabel }: { image: string; title: string; subtitle: string; onReplay: () => void; puppy?: boolean; lookImage?: string; lookLabel?: string }) {
   return <div className="game-finale">
     <img className="finale-scene" src={`.${image}`} alt={title} />
     <div className="finale-shade" />
     {puppy && <div className="finale-puppy"><img src="./a-dog.png" alt="Нарядная Пушинка на балу" /><span>Пушинка</span></div>}
+    {lookImage && <div className="finale-look"><img src={`.${lookImage}`} alt={`Выбранный образ: ${lookLabel}`} /><span>{lookLabel}</span></div>}
     <div className="finale-copy"><span>✦ ПОБЕДА ✦</span><h2>{title}</h2><p>{subtitle}</p><button onClick={onReplay}>Играть ещё раз</button></div>
   </div>;
 }
