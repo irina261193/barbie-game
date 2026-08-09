@@ -88,13 +88,38 @@ footer>span { font-size:10px;letter-spacing:.08em;color:#c998b6; }
 .puppy-game { background:#fff7fb; }
 .puppy-reference-screen { position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;background:#fff7fb; }
 .puppy-reference-screen>img { width:100%;height:100%;display:block;object-fit:cover; }
+.puppy-stage-overlay { position:absolute;z-index:1;left:17%;top:1.5%;width:66%;height:67.5%;object-fit:cover!important;object-position:center!important;border:8px solid white;border-radius:48% 48% 9% 9%;box-shadow:0 14px 35px rgba(196,63,126,.18);animation:pop .3s; }
+.puppy-stage-overlay.dirty { object-position:center 48%!important; }
+.puppy-stage-overlay.grooming { object-position:center 42%!important; }
+.puppy-score { position:absolute;z-index:5;left:3%;top:4%;padding:10px 17px;border:2px solid #f5a9ca;border-radius:28px;background:rgba(255,255,255,.94);color:#a53071;font-size:12px;font-weight:800;letter-spacing:.12em;box-shadow:0 8px 22px rgba(190,38,105,.17); }
+.puppy-score b { margin-left:7px;color:#ef2f86;font-size:20px; }
 .puppy-hotspot { position:absolute;z-index:2;top:72.4%;width:18.7%;height:24.9%;border:0;border-radius:15%;background:transparent;transition:.2s; }
 .puppy-hotspot-wash { left:19.6%; }.puppy-hotspot-brush { left:40.4%; }.puppy-hotspot-bow { left:61.3%; }
 .puppy-hotspot:hover { background:rgba(255,255,255,.12);box-shadow:0 0 0 5px rgba(255,91,159,.28),0 12px 28px rgba(194,48,116,.2);transform:translateY(-3px); }
 .puppy-hotspot.done { background:rgba(255,220,237,.2);box-shadow:inset 0 0 0 6px rgba(238,58,136,.72),0 10px 28px rgba(194,48,116,.22); }
+.puppy-hotspot.current { box-shadow:0 0 0 6px rgba(255,255,255,.85),0 0 0 10px rgba(238,58,136,.65),0 12px 30px rgba(194,48,116,.28);animation:pulse-action 1.35s infinite alternate; }
+.puppy-hotspot:disabled:not(.current) { cursor:default; }
 .puppy-hotspot span { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap; }
-.puppy-complete { position:absolute;z-index:4;left:50%;bottom:2.5%;margin:0;padding:10px 22px;border-radius:30px;background:#f02f86;color:white;font-weight:800;opacity:0;transform:translate(-50%,20px);transition:.3s;box-shadow:0 8px 22px rgba(190,38,105,.3);pointer-events:none; }
+.puppy-complete { position:absolute;z-index:4;left:50%;top:64%;margin:0;padding:8px 18px;border-radius:30px;background:#fff;color:#d52b78;font-weight:800;opacity:0;transform:translate(-50%,20px);transition:.3s;box-shadow:0 8px 22px rgba(190,38,105,.24);pointer-events:none; }
 .puppy-complete.show { opacity:1;transform:translate(-50%,0); }
+.puppy-ball-button { position:absolute;z-index:6;left:50%;top:57%;transform:translateX(-50%);min-width:200px;padding:13px 25px;border:3px solid white;border-radius:28px;background:linear-gradient(180deg,#ff5ca5,#e91f78);color:white;font-size:20px;font-weight:900;box-shadow:0 10px 26px rgba(190,38,105,.32);animation:pop .3s; }
+.puppy-ball-button:hover { transform:translateX(-50%) translateY(-3px);filter:brightness(1.06); }
+.puppy-ball-button span { margin-left:8px;padding:3px 8px;border-radius:14px;background:rgba(255,255,255,.22);font-size:13px; }
+
+.modal:has(.game-finale) { width:min(1180px,96vw);overflow:hidden;border-radius:32px;background:#42184d; }
+.game-finale { position:relative;width:100%;min-height:min(760px,88vh);overflow:hidden;background:#541a55;color:white; }
+.finale-scene { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:finale-zoom 9s ease-out both; }
+.finale-shade { position:absolute;inset:0;background:linear-gradient(180deg,rgba(44,9,52,.03) 28%,rgba(50,8,53,.22) 58%,rgba(42,5,45,.88) 100%); }
+.finale-copy { position:absolute;z-index:3;left:50%;bottom:5%;width:min(720px,88%);transform:translateX(-50%);text-align:center;text-shadow:0 3px 18px rgba(45,4,44,.8); }
+.finale-copy>span { color:#ffe495;font-size:13px;font-weight:900;letter-spacing:.25em; }
+.finale-copy h2 { margin:5px 0 4px;color:white;font-family:var(--font-display),serif;font-size:clamp(38px,5vw,66px);line-height:1;text-shadow:0 3px 0 #b12d76,0 8px 22px rgba(50,6,48,.5); }
+.finale-copy p { margin:10px auto 18px;max-width:650px;font-size:16px;line-height:1.45; }
+.finale-copy button { padding:12px 24px;border:2px solid white;border-radius:24px;background:linear-gradient(180deg,#ff5ba5,#e51f78);color:white;font-weight:850;box-shadow:0 9px 25px rgba(45,4,44,.34); }
+.finale-puppy { position:absolute;z-index:4;left:4%;bottom:4%;width:185px;height:185px;overflow:hidden;border:7px solid white;border-radius:50%;background:#fff0f7;box-shadow:0 12px 35px rgba(35,3,38,.45); }
+.finale-puppy img { width:100%;height:100%;object-fit:cover;object-position:center 17%;transform:scale(1.55); }
+.finale-puppy span { position:absolute;left:50%;bottom:8px;transform:translateX(-50%);padding:4px 12px;border-radius:18px;background:#ec3285;color:white;font-size:12px;font-weight:900; }
+@keyframes pulse-action { to { filter:brightness(1.06);transform:translateY(-4px) } }
+@keyframes finale-zoom { from { transform:scale(1.04) } to { transform:scale(1) } }
 @keyframes fade { from{opacity:0} } @keyframes pop { from{opacity:0;transform:scale(.94)} } @keyframes bounce { to{transform:translateY(-12px) rotate(3deg)} } @keyframes float { to{transform:translateY(-16px)} }
 @media(max-width:900px){ .topbar{gap:18px;height:76px}.brand{min-width:auto}.brand small{display:none}nav{display:none}.search{margin-left:auto;width:190px}.hero{min-height:390px}.cards{grid-template-columns:1fr;max-width:600px;margin:auto}.section-heading{align-items:start}.section-heading p{display:none}.card p{min-height:auto}.mini-game{padding:32px 20px}.dress-stage{grid-template-columns:1fr}.avatar{min-height:310px}.jewel-board{grid-template-columns:repeat(4,64px)}.jewel-board button{width:64px;height:58px;font-size:28px} }
 @media(max-width:520px){ .topbar{padding:0 14px}.brand b{font-size:21px}.brand-crown{width:38px;height:38px}.search{width:44px;border:0}.search input{display:none}.heart{width:38px;height:38px}.hero{min-height:350px;padding-top:44px}h1{font-size:55px}.hero>p{font-size:22px}.games-section{padding-top:55px}.section-heading h2{font-size:38px}.card h3{font-size:24px}footer{display:block;text-align:center}footer p{margin:12px}.mini-game{min-height:580px}.game-top h2{font-size:34px}.jewel-board{gap:6px;padding:14px;border-width:6px}.jewel-board button{width:58px;height:54px}.care-actions button{padding:8px;font-size:10px}.pet-stage{height:280px}.puppy{font-size:125px} }
@@ -155,3 +180,4 @@ footer { display:none; }
 @keyframes look-in { from { opacity:.5;transform:scale(1.03) } }
 @media(max-width:780px){ .modal:has(.royal-game){border-radius:22px}.royal-game{padding:25px 14px 24px}.royal-head h2{font-size:39px}.mission{margin-right:45px}.royal-layout{grid-template-columns:1fr}.princess-frame{height:470px;max-width:380px;width:100%;margin:auto}.accessory-options button{min-height:83px}.royal-finish{min-width:240px}.modal:has(.royal-game) .close{width:42px;height:42px;right:12px;top:11px} }
 @media(max-width:780px){ .modal:has(.puppy-game){width:min(96vw,135vh);border-radius:24px}.modal:has(.puppy-game) .close{width:42px;height:42px;right:10px;top:10px}.puppy-hotspot:hover{box-shadow:0 0 0 3px rgba(255,91,159,.28)}.puppy-hotspot.done{box-shadow:inset 0 0 0 3px rgba(238,58,136,.72)}.puppy-complete{padding:6px 12px;font-size:11px} }
+@media(max-width:780px){ .puppy-stage-overlay{border-width:4px}.puppy-score{left:2%;top:2%;padding:5px 9px;font-size:8px}.puppy-score b{font-size:13px}.puppy-ball-button{top:54%;min-width:140px;padding:8px 15px;font-size:14px}.puppy-complete{top:64%;font-size:9px}.game-finale{min-height:72vh}.finale-copy{bottom:4%}.finale-copy h2{font-size:36px}.finale-copy p{font-size:13px}.finale-puppy{width:110px;height:110px;left:3%;bottom:23%} }
