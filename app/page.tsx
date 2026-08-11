@@ -182,7 +182,7 @@ function PuppyGame() {
   const doCare = (id: string) => {
     if (actions[care.length]?.id === id) setCare([...care, id]);
   };
-  const puppyStates = ["./puppy-dirty-shaggy.png", "./puppy-clean-shaggy.png", "./a-dog.png", "./dog-in-jacket.png"];
+  const puppyStates = ["./puppy-dirty-shaggy.png", "./puppy-clean-shaggy.png", "./puppy-clean-groomed.png", "./dog-in-jacket.png"];
 
   if (atBall) return <GameFinale image="/barbie-and-ken.png" title="Барби, Кен и Пушинка танцуют!" subtitle="Нарядная Пушинка оказалась на королевском балу и танцует вместе с Барби и Кеном." puppy dancing onReplay={() => { setCare([]); setAtBall(false); }} />;
 
