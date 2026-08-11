@@ -213,7 +213,6 @@ function PuppyGame() {
         </button>)}
       </div>
       {care.length === 3 && <button className="puppy-ball-button" onClick={() => setAtBall(true)}>На бал! <span>+10</span></button>}
-      <p className={`puppy-complete ${care.length === 3 ? "show" : ""}`} aria-live="polite">Пушинка готова! ✨</p>
     </div>
   </div>;
 }
