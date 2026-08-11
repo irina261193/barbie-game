@@ -184,7 +184,7 @@ function PuppyGame() {
   };
   const puppyStates = ["./puppy-dirty-shaggy.png", "./puppy-clean-shaggy.png", "./a-dog.png", "./dog-in-jacket.png"];
 
-  if (atBall) return <GameFinale image="/barbie-and-ken.png" title="Пушинка на королевском балу!" subtitle="За 100 очков нарядная Пушинка отправилась на бал вместе с Барби и Кеном." puppy onReplay={() => { setCare([]); setAtBall(false); }} />;
+  if (atBall) return <GameFinale image="/barbie-and-ken.png" title="Барби, Кен и Пушинка танцуют!" subtitle="Нарядная Пушинка оказалась на королевском балу и танцует вместе с Барби и Кеном." puppy dancing onReplay={() => { setCare([]); setAtBall(false); }} />;
 
   return <div className="puppy-game">
     <div className="puppy-reference-screen">
