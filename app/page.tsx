@@ -18,9 +18,9 @@ const dresses = [
   { name: "Небесный вальс", color: "#6dbcf0", image: "/dress-up/sky-princess.png", ballImage: "/ball-sky.png" },
 ];
 const accessories = [
-  { name: "Корона мечты", note: "золотое сияние", icon: "👑", className: "crown" },
-  { name: "Звёздная тиара", note: "лунные кристаллы", icon: "💎", className: "tiara" },
-  { name: "Бант принцессы", note: "розовый шёлк", icon: "🎀", className: "bow" },
+  { name: "Колье с сердцем", note: "розовое золото", className: "necklace" },
+  { name: "Звёздная тиара", note: "лунные кристаллы", className: "tiara" },
+  { name: "Жемчужное колье", note: "королевский жемчуг", className: "choker" },
 ];
 const jewels = ["💖", "🌙", "⭐", "👑", "💎", "🌸"];
 
@@ -116,7 +116,7 @@ function DressGame() {
   };
   const checkLook = () => setResult(dress === targetDress && accessory === targetAccessory ? "win" : "try");
 
-  if (result === "win") return <GameFinale image={dresses[dress].ballImage} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
+  if (result === "win") return <GameFinale image={dresses[dress].ballImage} title="Барби танцует с Кеном!" subtitle={`Барби отправилась на бал в выбранном платье «${dresses[dress].name}».`} dancing onReplay={() => { setDress(0); setAccessory(null); setResult(null); }} />;
 
   return <div className="royal-game">
     <div className="royal-sky" aria-hidden="true"><span>✦</span><span>✧</span><span>⋆</span><span>✦</span></div>
@@ -125,7 +125,7 @@ function DressGame() {
     <div className="royal-layout">
       <div className="princess-frame">
         <img key={dresses[dress].image} src={asset(dresses[dress].image)} alt={`Барби в образе «${dresses[dress].name}»`} />
-        {accessory !== null && <span className={`worn-accessory ${accessories[accessory].className}`}>{accessories[accessory].icon}</span>}
+        {accessory !== null && <span className={`worn-accessory ${accessories[accessory].className}`} aria-label={accessories[accessory].name} />}
         <div className="look-label"><span>ТВОЙ ОБРАЗ</span><b>{dresses[dress].name}</b></div>
       </div>
       <div className="closet">
@@ -133,7 +133,7 @@ function DressGame() {
         <div className="dress-options">{dresses.map((d, i) => <button className={dress === i ? "selected" : ""} key={d.name} onClick={() => chooseDress(i)}><img src={asset(d.image)} alt="" /><span><b>{d.name}</b><small>{i === 0 ? "розовый шёлк" : i === 1 ? "лунные кристаллы" : "звёздный атлас"}</small></span><i>{dress === i ? "✓" : ""}</i></button>)}</div>
         <div className="choice-title accessories-title"><span>✦</span><h3>Аксессуар</h3><span>✦</span></div>
         <div className="accessory-showcase">
-          <img src={asset("/accessoires.png")} alt="Корона мечты, Звёздная тиара и Бант принцессы" />
+          <img src={asset("/royal-jewelry.png")} alt="Реалистичные королевские колье и тиара" />
           {accessories.map((a, i) => <button className={accessory === i ? "selected" : ""} key={a.name} onClick={() => { setAccessory(i); setResult(null); }} aria-label={`Выбрать аксессуар «${a.name}»`} aria-pressed={accessory === i}><span>{accessory === i ? "✓ Выбрано" : a.name}</span></button>)}
         </div>
         <button className="royal-finish" onClick={checkLook}>Отправить на бал <span>✦</span></button>
@@ -144,11 +144,31 @@ function DressGame() {
 }
 
 function GemsGame() {
-  const initial = useMemo(() => Array.from({ length: 16 }, (_, i) => jewels[(i * 5 + 3) % jewels.length]), []);
-  const [board, setBoard] = useState(initial); const [score, setScore] = useState(0); const [selected, setSelected] = useState<number | null>(null); const [message, setMessage] = useState("Найди две одинаковые фигурки");
-  const pick = (index: number) => { if (selected === null) { setSelected(index); setMessage("Теперь найди такую же"); return; } if (selected === index) { setSelected(null); return; } if (board[selected] === board[index]) { const next = [...board]; const replacements = ["💖", "🌙", "⭐", "👑", "💎", "🌸"]; next[selected] = replacements[Math.floor(Math.random() * replacements.length)]; next[index] = replacements[Math.floor(Math.random() * replacements.length)]; setBoard(next); setScore(score + 20); setMessage("Волшебная пара! +20 очков ✦"); } else setMessage("Почти! Попробуй другую пару"); setSelected(null); };
-  if (score >= 100) return <GameFinale image="/victory.png" title="Победа!" subtitle="Ты собрала 100 очков и зажгла королевскую звезду!" onReplay={() => { setBoard(initial); setScore(0); setSelected(null); setMessage("Найди две одинаковые фигурки"); }} />;
-  return <div className="mini-game gems-game"><div className="game-top"><span>ИГРА 02</span><h2>Магические самоцветы</h2><p>{message}</p></div><div className="score">СЧЁТ <b>{score}</b></div><div className="jewel-board">{board.map((j, i) => <button key={i} onClick={() => pick(i)} className={selected === i ? "selected" : ""}>{j}</button>)}</div><div className="goal">Собери 100 очков, чтобы зажечь королевскую звезду {score >= 100 ? "🌟" : "☆"}</div></div>;
+  const deck = useMemo(() => [...jewels, ...jewels].map((gem, id) => ({ gem, id })).sort((a, b) => ((a.id * 7) % 11) - ((b.id * 7) % 11)), []);
+  const [open, setOpen] = useState<number[]>([]);
+  const [matched, setMatched] = useState<string[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [message, setMessage] = useState("Открывай по две карточки и ищи одинаковые самоцветы");
+  useEffect(() => {
+    if (open.length !== 2) return;
+    const timer = window.setTimeout(() => {
+      const [first, second] = open;
+      if (deck[first].gem === deck[second].gem) {
+        setMatched((items) => [...items, deck[first].gem]);
+        setMessage("Волшебная пара! Звезда зажглась ✦");
+      } else setMessage("Не совпало — запомни карточки и попробуй снова");
+      setOpen([]);
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [open, deck]);
+  const pick = (index: number) => {
+    if (open.length === 2 || open.includes(index) || matched.includes(deck[index].gem)) return;
+    setOpen((items) => [...items, index]);
+    if (open.length === 1) setMoves((value) => value + 1);
+  };
+  const replay = () => { setOpen([]); setMatched([]); setMoves(0); setMessage("Открывай по две карточки и ищи одинаковые самоцветы"); };
+  if (matched.length === jewels.length) return <GameFinale image="/victory.png" title="Победа!" subtitle={`Ты нашла все пары за ${moves} ходов и зажгла королевскую звезду!`} onReplay={replay} />;
+  return <div className="mini-game gems-game"><div className="game-top"><span>ИГРА 02</span><h2>Магические самоцветы</h2><p>{message}</p></div><div className="score">ПАРЫ <b>{matched.length}/6</b><small>{moves} ходов</small></div><div className="jewel-board memory-jewels">{deck.map((card, i) => { const shown = open.includes(i) || matched.includes(card.gem); return <button key={card.id} onClick={() => pick(i)} className={`${shown ? "revealed" : ""} ${matched.includes(card.gem) ? "matched" : ""}`}><span>✦</span><b>{card.gem}</b></button>; })}</div><div className="goal">Каждая найденная пара зажигает звезду <span>{jewels.map((_, i) => <i className={i < matched.length ? "lit" : ""} key={i}>★</i>)}</span></div></div>;
 }
 
 function PuppyGame() {
@@ -162,13 +182,14 @@ function PuppyGame() {
   const doCare = (id: string) => {
     if (actions[care.length]?.id === id) setCare([...care, id]);
   };
+  const puppyStates = ["./puppy-dirty-shaggy.png", "./puppy-clean-shaggy.png", "./a-dog.png", "./dog-in-jacket.png"];
 
   if (atBall) return <GameFinale image="/barbie-and-ken.png" title="Пушинка на королевском балу!" subtitle="За 100 очков нарядная Пушинка отправилась на бал вместе с Барби и Кеном." puppy onReplay={() => { setCare([]); setAtBall(false); }} />;
 
   return <div className="puppy-game">
     <div className="puppy-reference-screen">
       <div className={`puppy-stage stage-${care.length}`}>
-        <img src={care.length === 0 ? "./a-dirty-dog.png" : care.length < 3 ? "./clean-puppy.png" : "./dog-in-jacket.png"} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый щенок без одежды" : care.length === 2 ? "Чистый причесанный щенок без одежды" : "Чистый причесанный щенок в розовой жилетке"} />
+        <img src={puppyStates[care.length]} alt={care.length === 0 ? "Грязный лохматый щенок" : care.length === 1 ? "Чистый лохматый щенок" : care.length === 2 ? "Чистый причесанный щенок" : "Чистый причесанный щенок в розовой куртке"} />
         <div className="puppy-status">{care.length === 0 ? "Пушинке нужен уход" : care.length === 1 ? "Чисто! Теперь расчеши" : care.length === 2 ? "Причесано! Осталась жилетка" : "Пушинка в жилетке и готова к балу!"}</div>
       </div>
       <div className="puppy-score">СЧЁТ <b>{care.length * 30}</b></div>
@@ -183,10 +204,11 @@ function PuppyGame() {
   </div>;
 }
 
-function GameFinale({ image, title, subtitle, onReplay, puppy = false, lookImage, lookLabel }: { image: string; title: string; subtitle: string; onReplay: () => void; puppy?: boolean; lookImage?: string; lookLabel?: string }) {
-  return <div className="game-finale">
+function GameFinale({ image, title, subtitle, onReplay, puppy = false, dancing = false, lookImage, lookLabel }: { image: string; title: string; subtitle: string; onReplay: () => void; puppy?: boolean; dancing?: boolean; lookImage?: string; lookLabel?: string }) {
+  return <div className={`game-finale ${dancing ? "dancing-finale" : ""}`}>
     <img className="finale-scene" src={`.${image}`} alt={title} />
     <div className="finale-shade" />
+    {dancing && <div className="dance-magic" aria-hidden="true"><i>✦</i><i>♪</i><i>✧</i><i>♫</i><i>✦</i></div>}
     {puppy && <div className="finale-puppy"><img src="./dog-in-jacket.png" alt="Нарядная Пушинка в жилетке на балу" /><span>Пушинка</span></div>}
     {lookImage && <div className="finale-look"><img src={`.${lookImage}`} alt={`Выбранный образ: ${lookLabel}`} /><span>{lookLabel}</span></div>}
     <div className="finale-copy"><span>✦ ПОБЕДА ✦</span><h2>{title}</h2><p>{subtitle}</p><button onClick={onReplay}>Играть ещё раз</button></div>
