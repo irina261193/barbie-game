@@ -148,27 +148,41 @@ function GemsGame() {
   const [open, setOpen] = useState<number[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
   const [moves, setMoves] = useState(0);
-  const [message, setMessage] = useState("Открывай по две карточки и ищи одинаковые самоцветы");
+  const [time, setTime] = useState(45);
+  const [lives, setLives] = useState(3);
+  const [status, setStatus] = useState<"ready" | "playing" | "lost">("ready");
+  const [message, setMessage] = useState("Найди 6 пар за 45 секунд и сохрани все сердечки");
   useEffect(() => {
-    if (open.length !== 2) return;
+    if (status !== "playing") return;
+    const timer = window.setInterval(() => setTime((value) => {
+      if (value <= 1) { window.clearInterval(timer); setStatus("lost"); setMessage("Время закончилось!"); return 0; }
+      return value - 1;
+    }), 1000);
+    return () => window.clearInterval(timer);
+  }, [status]);
+  useEffect(() => {
+    if (open.length !== 2 || status !== "playing") return;
     const timer = window.setTimeout(() => {
       const [first, second] = open;
       if (deck[first].gem === deck[second].gem) {
         setMatched((items) => [...items, deck[first].gem]);
         setMessage("Волшебная пара! Звезда зажглась ✦");
-      } else setMessage("Не совпало — запомни карточки и попробуй снова");
+      } else {
+        setLives((value) => { if (value <= 1) { setStatus("lost"); setMessage("Сердечки закончились!"); return 0; } return value - 1; });
+        setMessage("Не совпало — минус одно сердечко");
+      }
       setOpen([]);
     }, 700);
     return () => window.clearTimeout(timer);
-  }, [open, deck]);
+  }, [open, deck, status]);
   const pick = (index: number) => {
-    if (open.length === 2 || open.includes(index) || matched.includes(deck[index].gem)) return;
+    if (status !== "playing" || open.length === 2 || open.includes(index) || matched.includes(deck[index].gem)) return;
     setOpen((items) => [...items, index]);
     if (open.length === 1) setMoves((value) => value + 1);
   };
-  const replay = () => { setOpen([]); setMatched([]); setMoves(0); setMessage("Открывай по две карточки и ищи одинаковые самоцветы"); };
-  if (matched.length === jewels.length) return <GameFinale image="/victory.png" title="Победа!" subtitle={`Ты нашла все пары за ${moves} ходов и зажгла королевскую звезду!`} onReplay={replay} />;
-  return <div className="mini-game gems-game"><div className="game-top"><span>ИГРА 02</span><h2>Магические самоцветы</h2><p>{message}</p></div><div className="score">ПАРЫ <b>{matched.length}/6</b><small>{moves} ходов</small></div><div className="jewel-board memory-jewels">{deck.map((card, i) => { const shown = open.includes(i) || matched.includes(card.gem); return <button key={card.id} onClick={() => pick(i)} className={`${shown ? "revealed" : ""} ${matched.includes(card.gem) ? "matched" : ""}`}><span>✦</span><b>{card.gem}</b></button>; })}</div><div className="goal">Каждая найденная пара зажигает звезду <span>{jewels.map((_, i) => <i className={i < matched.length ? "lit" : ""} key={i}>★</i>)}</span></div></div>;
+  const start = () => { setOpen([]); setMatched([]); setMoves(0); setTime(45); setLives(3); setStatus("playing"); setMessage("Челлендж начался — ищи пары!"); };
+  if (matched.length === jewels.length) return <GameFinale image="/victory.png" title="Челлендж пройден!" subtitle={`Ты нашла все пары за ${moves} ходов. Осталось ${time} секунд и ${lives} сердечка!`} onReplay={start} />;
+  return <div className="mini-game gems-game"><div className="game-top"><span>ЧЕЛЛЕНДЖ 02</span><h2>Магические самоцветы</h2><p>{message}</p></div><div className={`challenge-timer ${time <= 10 ? "danger" : ""}`}>⏱ <b>{time}</b></div><div className="challenge-lives" aria-label={`${lives} жизни`}>{[0,1,2].map(i => <i className={i < lives ? "alive" : ""} key={i}>♥</i>)}</div><div className="score">ПАРЫ <b>{matched.length}/6</b><small>{moves} ходов</small></div><div className="jewel-board memory-jewels">{deck.map((card, i) => { const shown = open.includes(i) || matched.includes(card.gem); return <button disabled={status !== "playing"} key={card.id} onClick={() => pick(i)} className={`${shown ? "revealed" : ""} ${matched.includes(card.gem) ? "matched" : ""}`}><span>✦</span><b>{card.gem}</b></button>; })}</div><div className="goal">Найди все пары до конца времени <span>{jewels.map((_, i) => <i className={i < matched.length ? "lit" : ""} key={i}>★</i>)}</span></div>{status !== "playing" && <div className="challenge-cover"><b>{status === "lost" ? "Челлендж не пройден" : "Готова к челленджу?"}</b><span>{status === "lost" ? "Попробуй ещё раз и запоминай карточки" : "45 секунд · 3 сердечка · 6 пар"}</span><button onClick={start}>{status === "lost" ? "Повторить" : "Начать челлендж"}</button></div>}</div>;
 }
 
 function PuppyGame() {
